@@ -38,7 +38,7 @@ public class WorldChangeListener implements Listener {
             World from = event.getFrom();
             List<Player> oldfriends = from.getPlayers();
             for (Player p : oldfriends) {
-                p.sendMessage(formateLeaveMessage(player.getName(), from.getName()));
+                p.sendMessage(formatLeaveMessage(player.getName(), from.getName()));
             }
             List<Player> newfriends = player.getWorld().getPlayers();
             for (Player pl : newfriends) {
@@ -57,7 +57,7 @@ public class WorldChangeListener implements Listener {
         }
         return ChatColor.translateAlternateColorCodes(AND, formated);
     }
-    private String formateLeaveMessage(String player, String oldWorld) {
+    private String formatLeaveMessage(String player, String oldWorld) {
         String formated = leaveMsg;
         if (leaveMsg.contains("%PLAYER%")) {
             formated = formated.replace("%PLAYER%", player);

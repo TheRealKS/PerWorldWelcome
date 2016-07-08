@@ -3,6 +3,9 @@
 join-message: "&9%PLAYER% joined this world!"
 leave-message: "&9%PLAYER% left this world!"
 
+join-server-message: "&9%PLAYER% joined the game!"
+leave-server-message: "&9%PLAYER% left the game!"
+
 global-message: "&9%PLAYER% joined %WORLD%, leaving %WORLD2%!"
 
 #If you don't know what this does leave the defaults
