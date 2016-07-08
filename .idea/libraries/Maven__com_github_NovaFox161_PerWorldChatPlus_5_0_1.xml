@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.NovaFox161:PerWorldChatPlus:5.0.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/NovaFox161/PerWorldChatPlus/5.0.1/PerWorldChatPlus-5.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/NovaFox161/PerWorldChatPlus/5.0.1/PerWorldChatPlus-5.0.1-javadoc.jar!/" />
+      <root url="http://novafox161.github.io/PerWorldChatPlus/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/NovaFox161/PerWorldChatPlus/5.0.1/PerWorldChatPlus-5.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

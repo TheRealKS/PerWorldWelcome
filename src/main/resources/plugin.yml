@@ -1,0 +1,8 @@
+name: PerWorldWelcome
+main: com.koens.perworldwelcome.PerWorldWelcome
+version: 1.0
+author: TheRealKS123
+permissions:
+  perworldwelcome.receiveerrors:
+    description: Allows you to receive error messages this plugin generates.
+    default: op

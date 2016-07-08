@@ -1,0 +1,10 @@
+#For these messages you can also use {WORLD} to get the name of the joined or left world, WORLD2 is only supported for global messages
+
+join-message: "&9%PLAYER% joined this world!"
+leave-message: "&9%PLAYER% left this world!"
+
+global-message: "&9%PLAYER% joined %WORLD%, leaving %WORLD2%!"
+
+#If you don't know what this does leave the defaults
+broadcast-globally: false
+error-broadcast: true
