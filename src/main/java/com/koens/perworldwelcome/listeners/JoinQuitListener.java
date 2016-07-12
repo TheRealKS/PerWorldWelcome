@@ -1,5 +1,6 @@
 package com.koens.perworldwelcome.listeners;
 
+import com.koens.perworldwelcome.util.ConfigUser;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,7 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
 
-public class JoinQuitListener implements Listener {
+public class JoinQuitListener extends ConfigUser implements Listener {
 
     private boolean broadcast;
     private boolean queue;

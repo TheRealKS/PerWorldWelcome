@@ -1,8 +1,16 @@
 name: PerWorldWelcome
 main: com.koens.perworldwelcome.PerWorldWelcome
-version: 1.0
+version: 1.2
 author: TheRealKS123
+commands:
+  pwwtoggle:
+    description: This command will toggle the functionality of this plugin
+    usage: /pwwtoggle
+    permission: perworldwelcome.toggle
 permissions:
   perworldwelcome.receiveerrors:
     description: Allows you to receive error messages this plugin generates.
+    default: op
+  perworldwelcome.toggle:
+    description: Allows you to toggle the functionality of this plugin.
     default: op
