@@ -46,7 +46,7 @@ public class PerWorldWelcome extends JavaPlugin {
         }
         getLogger().info("Config files loaded!");
         WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, playerConfig, this);
-        JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, joinServerMsg, leaveServerMsg);
+        JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
         getServer().getPluginManager().registerEvents(listener, this);
         getServer().getPluginManager().registerEvents(listener1, this);
         getCommand("pwwtoggle").setExecutor(new ToggleCMD(this));
@@ -180,7 +180,7 @@ public class PerWorldWelcome extends JavaPlugin {
         }
         File yml = new File(file, "players.yml");
         playerConfig = YamlConfiguration.loadConfiguration(yml);
-        if (!file.exists()) {
+        if (!yml.exists()) {
             playerConfig.save(yml);
         }
         playerConfig = YamlConfiguration.loadConfiguration(yml);
@@ -201,7 +201,7 @@ public class PerWorldWelcome extends JavaPlugin {
                 getServer().getPluginManager().disablePlugin(this);
             }
             WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, playerConfig, this);
-            JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, joinServerMsg, leaveServerMsg);
+            JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
             getServer().getPluginManager().registerEvents(listener, this);
             getServer().getPluginManager().registerEvents(listener1, this);
         } else {

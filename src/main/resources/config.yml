@@ -4,16 +4,13 @@ join-message: "&9%PLAYER% joined this world!"
 leave-message: "&9%PLAYER% left this world!"
 first-join-message: "&9%PLAYER% joined this world for the first time!"
 
-# This value indicates wheter or not a message should be broadcast when a player leaves or joins a world
-do-server-join-leave-message: true
-
 join-server-message: "&9%PLAYER% joined the game!"
 leave-server-message: "&9%PLAYER% left the game!"
 first-server-join-message: "&9%PLAYER% joined the server for the first time!"
 
 global-message: "&9%PLAYER% joined %WORLD%, leaving %WORLD2%!"
 global-first-join-message: "&9%PLAYER% joined %WORLD% for the first time!"
-global-first-join-server-message: "&9Welcome %PLAYER% to the server!";
+global-first-join-server-message: "&9Welcome %PLAYER% to the server!"
 
 #If you don't know what this does leave the defaults
 broadcast-globally: false

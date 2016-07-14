@@ -49,14 +49,15 @@ public class WorldChangeListener extends ConfigUser implements Listener {
         if (global) {
             Player player = event.getPlayer();
             World from = event.getFrom();
+            String path = player.getName() + "." + player.getWorld().getName();
             if (broadcastFirstJoin) {
-                if (playerConfig.isSet(player.getName()) && !playerConfig.getBoolean(player.getName())) {
+                if (playerConfig.isSet(path) && !playerConfig.getBoolean(path)) {
                     Bukkit.broadcastMessage (formatGlobalMessage(firstJoinGlobalMsg, player.getName(), player.getWorld().getName(), from.getName()));
-                    playerConfig.set(player.getName(), true);
+                    savePlayerToConfig(playerConfig, player, worldGrouping);
                     saveConfig(playerConfig, plugin);
-                } else if (!playerConfig.isSet(player.getName())) {
+                } else if (!playerConfig.isSet(path)) {
                     Bukkit.broadcastMessage (formatGlobalMessage(firstJoinGlobalMsg, player.getName(), player.getWorld().getName(), from.getName()));
-                    playerConfig.set(player.getName(), true);
+                    savePlayerToConfig(playerConfig, player, worldGrouping);
                     saveConfig(playerConfig, plugin);
                 }
                 else {
@@ -70,6 +71,7 @@ public class WorldChangeListener extends ConfigUser implements Listener {
         else {
             Player player = event.getPlayer();
             World from = event.getFrom();
+            String path = player.getName() + "." + player.getWorld().getName();
             List<Player> oldfriends = setupLeavingWorldList(from);
             String message = formatLeaveMessage(leaveMsg, player.getName(), from.getName());
             for (Player p : oldfriends) {
@@ -77,19 +79,19 @@ public class WorldChangeListener extends ConfigUser implements Listener {
             }
             List<Player> newfriends = setupJoiningWorldList(player.getWorld());
             if (broadcastFirstJoin) {
-                if (playerConfig.isSet(player.getName()) && !playerConfig.getBoolean(player.getName())) {
+                if (playerConfig.isSet(path) && !playerConfig.getBoolean(path)) {
                     String msg = formatJoinMessage(firstJoinMsg, player.getName(), player.getWorld().getName());
                     for (Player pl : newfriends) {
                         pl.sendMessage(msg);
                     }
-                    playerConfig.set(player.getName(), true);
+                    savePlayerToConfig(playerConfig, player, worldGrouping);
                     saveConfig(playerConfig, plugin);
-                } else if (!playerConfig.isSet(player.getName())) {
+                } else if (!playerConfig.isSet(path)) {
                     String msg = formatJoinMessage(firstJoinMsg, player.getName(), player.getWorld().getName());
                     for (Player pl : newfriends) {
                         pl.sendMessage(msg);
                     }
-                    playerConfig.set(player.getName(), true);
+                    savePlayerToConfig(playerConfig, player, worldGrouping);
                     saveConfig(playerConfig, plugin);
                 }
                 else {
@@ -97,7 +99,7 @@ public class WorldChangeListener extends ConfigUser implements Listener {
                     for (Player pl : newfriends) {
                         pl.sendMessage(msg);
                     }
-                    playerConfig.set(player.getName(), true);
+                    savePlayerToConfig(playerConfig, player, worldGrouping);
                     saveConfig(playerConfig, plugin);
                 }
             }
@@ -106,8 +108,6 @@ public class WorldChangeListener extends ConfigUser implements Listener {
                 for (Player pl : newfriends) {
                     pl.sendMessage(msg);
                 }
-                playerConfig.set(player.getName(), true);
-                saveConfig(playerConfig, plugin);
             }
         }
     }
