@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JoinQuitListener extends ConfigUser implements Listener {
@@ -119,22 +120,40 @@ public class JoinQuitListener extends ConfigUser implements Listener {
         if (worldGrouping) {
             String worldname = joining.getName();
             if (joining.getEnvironment().equals(World.Environment.NETHER)) {
-                List<Player> overworld = plugin.getServer().getWorld(worldname.replace("_nether", "")).getPlayers();
-                List<Player> end = plugin.getServer().getWorld(worldname.replace("_nether", "_the_end")).getPlayers();
+                List<Player> overworld = new ArrayList<Player>();
+                List<Player> end = new ArrayList<Player>();
+                if (plugin.getServer().getWorld(worldname.replace("_nether", "")) != null) {
+                    overworld = plugin.getServer().getWorld(worldname.replace("_nether", "")).getPlayers();
+                }
+                if (plugin.getServer().getWorld(worldname.replace("_nether", "_the_end")) != null) {
+                    end = plugin.getServer().getWorld(worldname.replace("_nether", "_the_end")).getPlayers();
+                }
                 List<Player> current = joining.getPlayers();
                 current.addAll(overworld);
                 current.addAll(end);
                 return current;
             } else if (joining.getEnvironment().equals(World.Environment.THE_END)) {
-                List<Player> overworld = plugin.getServer().getWorld(worldname.replace("_the_end", "")).getPlayers();
-                List<Player> nether = plugin.getServer().getWorld(worldname.replace("_the_end", "_nether")).getPlayers();
+                List<Player> overworld = new ArrayList<Player>();
+                List<Player> nether = new ArrayList<Player>();
+                if (plugin.getServer().getWorld(worldname.replace("_the_end", "")) != null) {
+                    overworld = plugin.getServer().getWorld(worldname.replace("_the_end", "")).getPlayers();
+                }
+                if (plugin.getServer().getWorld(worldname.replace("_the_end", "_nether")) != null) {
+                    nether = plugin.getServer().getWorld(worldname.replace("_the_end", "_nether")).getPlayers();
+                }
                 List<Player> current = joining.getPlayers();
                 current.addAll(overworld);
                 current.addAll(nether);
                 return current;
             } else {
-                List<Player> nether = plugin.getServer().getWorld(worldname + "_nether").getPlayers();
-                List<Player> end = plugin.getServer().getWorld(worldname + "_the_end").getPlayers();
+                List<Player> nether = new ArrayList<Player>();
+                List<Player> end = new ArrayList<Player>();
+                if (plugin.getServer().getWorld(worldname + "_nether") != null) {
+                    nether = plugin.getServer().getWorld(worldname + "_nether").getPlayers();
+                }
+                if (plugin.getServer().getWorld(worldname + "_the_end") != null) {
+                    end = plugin.getServer().getWorld(worldname + "_the_end").getPlayers();
+                }
                 List<Player> current = joining.getPlayers();
                 current.addAll(nether);
                 current.addAll(end);
@@ -149,22 +168,40 @@ public class JoinQuitListener extends ConfigUser implements Listener {
         if (worldGrouping) {
             String worldname = leaving.getName();
             if (leaving.getEnvironment().equals(World.Environment.NETHER)) {
-                List<Player> overworld = plugin.getServer().getWorld(worldname.replace("_nether", "")).getPlayers();
-                List<Player> end = plugin.getServer().getWorld(worldname.replace("_nether", "_the_end")).getPlayers();
+                List<Player> overworld = new ArrayList<Player>();
+                List<Player> end = new ArrayList<Player>();
+                if (plugin.getServer().getWorld(worldname.replace("_nether", "")) != null) {
+                    overworld = plugin.getServer().getWorld(worldname.replace("_nether", "")).getPlayers();
+                }
+                if (plugin.getServer().getWorld(worldname.replace("_nether", "_the_end")) != null) {
+                    end = plugin.getServer().getWorld(worldname.replace("_nether", "_the_end")).getPlayers();
+                }
                 List<Player> current = leaving.getPlayers();
                 current.addAll(overworld);
                 current.addAll(end);
                 return current;
             } else if (leaving.getEnvironment().equals(World.Environment.THE_END)) {
-                List<Player> overworld = plugin.getServer().getWorld(worldname.replace("_the_end", "")).getPlayers();
-                List<Player> nether = plugin.getServer().getWorld(worldname.replace("_the_end", "_nether")).getPlayers();
+                List<Player> overworld = new ArrayList<Player>();
+                List<Player> nether = new ArrayList<Player>();
+                if (plugin.getServer().getWorld(worldname.replace("_the_end", "")) != null) {
+                    overworld = plugin.getServer().getWorld(worldname.replace("_the_end", "")).getPlayers();
+                }
+                if (plugin.getServer().getWorld(worldname.replace("_the_end", "_nether")) != null) {
+                    nether = plugin.getServer().getWorld(worldname.replace("_the_end", "_nether")).getPlayers();
+                }
                 List<Player> current = leaving.getPlayers();
                 current.addAll(overworld);
                 current.addAll(nether);
                 return current;
             } else {
-                List<Player> nether = plugin.getServer().getWorld(worldname + "_nether").getPlayers();
-                List<Player> end = plugin.getServer().getWorld(worldname + "_the_end").getPlayers();
+                List<Player> nether = new ArrayList<Player>();
+                List<Player> end = new ArrayList<Player>();
+                if (plugin.getServer().getWorld(worldname + "_nether") != null) {
+                    nether = plugin.getServer().getWorld(worldname + "_nether").getPlayers();
+                }
+                if (plugin.getServer().getWorld(worldname + "_the_end") != null) {
+                    end = plugin.getServer().getWorld(worldname + "_the_end").getPlayers();
+                }
                 List<Player> current = leaving.getPlayers();
                 current.addAll(nether);
                 current.addAll(end);
