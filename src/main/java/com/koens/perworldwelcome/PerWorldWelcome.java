@@ -35,6 +35,7 @@ public class PerWorldWelcome extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
         getLogger().info("Loading config files...");
         loadConfig();
         try {

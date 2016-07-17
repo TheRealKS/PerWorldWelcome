@@ -1,6 +1,7 @@
 package com.koens.perworldwelcome.commands;
 
 import com.koens.perworldwelcome.PerWorldWelcome;
+import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,6 +20,7 @@ public class ToggleCMD implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player) {
             Player p = (Player) commandSender;
+            p.awardAchievement(Achievement.END_PORTAL);
             if (p.hasPermission("perworldwelcome.toggle")) {
                 if (plugin.getEnabled()) {
                     plugin.setFunctionsEnabled(false);
