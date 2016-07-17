@@ -4,11 +4,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 
-public class AwardAchievmentListener implements Listener {
+public class AwardAchievementListener implements Listener {
 
 
     @EventHandler
-    public void onAchievmentAwarded(PlayerAchievementAwardedEvent event) {
+    public void onAchievementAwarded(PlayerAchievementAwardedEvent event) {
 
     }
 }

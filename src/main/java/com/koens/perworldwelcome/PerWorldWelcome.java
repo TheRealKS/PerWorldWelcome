@@ -3,6 +3,7 @@ package com.koens.perworldwelcome;
 import com.koens.perworldwelcome.commands.ToggleCMD;
 import com.koens.perworldwelcome.listeners.JoinQuitListener;
 import com.koens.perworldwelcome.listeners.WorldChangeListener;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -11,6 +12,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class PerWorldWelcome extends JavaPlugin {
 
@@ -35,7 +39,6 @@ public class PerWorldWelcome extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         getLogger().info("Loading config files...");
         loadConfig();
         try {
@@ -48,6 +51,13 @@ public class PerWorldWelcome extends JavaPlugin {
         getLogger().info("Config files loaded!");
         WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, playerConfig, this);
         JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
+        try {
+            if (getAnnouncheAchievements()) {
+                getLogger().warning("The option announce-achievements is enabled in server.properties! This value needs to be false in order for the player achievement function to work! Please set this value to false, or disable this functionality in the config.yml for this plugin!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         getServer().getPluginManager().registerEvents(listener, this);
         getServer().getPluginManager().registerEvents(listener1, this);
         getCommand("pwwtoggle").setExecutor(new ToggleCMD(this));
@@ -210,5 +220,21 @@ public class PerWorldWelcome extends JavaPlugin {
             PlayerJoinEvent.getHandlerList().unregister(this);
             PlayerQuitEvent.getHandlerList().unregister(this);
         }
+    }
+
+    private boolean getAnnouncheAchievements() throws IOException {
+        String file = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        file = file.substring(0, file.lastIndexOf("/"));
+        file = file.replaceAll("%20", " ");
+        File serverpropertiesfile = new File(file, "server.properties");
+        Path serverpropertiespath = serverpropertiesfile.toPath();
+        List<String> properties = Files.readAllLines(serverpropertiespath);
+        for (String a : properties) {
+            if (a.startsWith("announce-player-achievements")) {
+                String value = a.substring(a.indexOf("=") + 1);
+                return Boolean.valueOf(value);
+            }
+        }
+        return false;
     }
 }
