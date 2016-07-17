@@ -144,7 +144,7 @@ public class PerWorldWelcome extends JavaPlugin {
         }
         else {
             getLogger().warning("No first join message was set! Using default value!");
-            firstJoinMsg = "&9%PLAYER% joined this world for the first time";
+            firstJoinMsg = "&9%PLAYER% joined this world for the first time!";
             errorqueue = true;
         }
         if (getConfig().isSet("first-server-join-message") && getConfig().isString("first-server-join-message")) {
