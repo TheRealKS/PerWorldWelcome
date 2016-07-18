@@ -1,6 +1,7 @@
 package com.koens.perworldwelcome;
 
 import com.koens.perworldwelcome.commands.ToggleCMD;
+import com.koens.perworldwelcome.listeners.AwardAchievementListener;
 import com.koens.perworldwelcome.listeners.JoinQuitListener;
 import com.koens.perworldwelcome.listeners.WorldChangeListener;
 import org.bukkit.Bukkit;
@@ -54,6 +55,8 @@ public class PerWorldWelcome extends JavaPlugin {
         try {
             if (getAnnouncheAchievements()) {
                 getLogger().warning("The option announce-achievements is enabled in server.properties! This value needs to be false in order for the player achievement function to work! Please set this value to false, or disable this functionality in the config.yml for this plugin!");
+            } else {
+                getServer().getPluginManager().registerEvents(new AwardAchievementListener(), this);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -222,6 +225,7 @@ public class PerWorldWelcome extends JavaPlugin {
         }
     }
 
+    @SuppressWarnings("all")
     private boolean getAnnouncheAchievements() throws IOException {
         String file = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         file = file.substring(0, file.lastIndexOf("/"));
