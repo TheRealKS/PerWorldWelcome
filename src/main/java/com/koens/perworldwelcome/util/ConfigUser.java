@@ -37,6 +37,7 @@ public class ConfigUser {
                 paths.add(worldname.replace("the_end", "nether"));
                 paths.add(worldname);
             } else {
+                paths.add(worldname);
                 paths.add(worldname + "_nether");
                 paths.add(worldname + "_the_end");
             }
