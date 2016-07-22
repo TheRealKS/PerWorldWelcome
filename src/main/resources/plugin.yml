@@ -7,6 +7,9 @@ commands:
     description: This command will toggle the functionality of this plugin
     usage: /pwwtoggle
     permission: perworldwelcome.toggle
+  pwwinfo:
+    description: This command will display info about this plugin
+    usage: /pwwinfo
 permissions:
   perworldwelcome.receiveerrors:
     description: Allows you to receive error messages this plugin generates.

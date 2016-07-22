@@ -10,5 +10,5 @@ public enum ExtraAchievements {
     EXPLORE_ALL_BIOMES,
     END_PORTAL,
     THE_END,
-    FULL_BEACON;
+    FULL_BEACON
 }

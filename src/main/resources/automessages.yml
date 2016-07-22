@@ -1,0 +1,8 @@
+#Place messages to be broadcasted randomly here. This will happen per world.
+#You can exclude messages from being broadcasted by adding <EXCLUDE/> to the beggining of the message
+#When world grouping is enabled, and you also have a separate section for world_nether, the messages for world and world_nether are not merged.
+world:
+  enabled: true
+  messages:
+  - "This is a test message"
+  - "<EXCLUDE/>This message will be excluded!"

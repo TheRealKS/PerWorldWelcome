@@ -37,13 +37,16 @@ public class ConfigUser {
                 paths.add(worldname.replace("the_end", "nether"));
                 paths.add(worldname);
             } else {
+                paths.add(worldname);
                 paths.add(worldname + "_nether");
                 paths.add(worldname + "_the_end");
             }
         } else {
             paths.add(worldname);
         }
-        yml.createSection(target.getName());
+        if (!yml.isConfigurationSection(target.getName())) {
+            yml.createSection(target.getName());
+        }
         for (String s : paths) {
             yml.set(target.getName() + "." + s, true);
         }

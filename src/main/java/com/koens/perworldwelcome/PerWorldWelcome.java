@@ -1,7 +1,7 @@
 package com.koens.perworldwelcome;
 
+import com.koens.perworldwelcome.commands.InfoCMD;
 import com.koens.perworldwelcome.commands.ToggleCMD;
-import com.koens.perworldwelcome.listeners.AwardAchievementListener;
 import com.koens.perworldwelcome.listeners.JoinQuitListener;
 import com.koens.perworldwelcome.listeners.WorldChangeListener;
 import org.bukkit.Bukkit;
@@ -37,10 +37,11 @@ public class PerWorldWelcome extends JavaPlugin {
     private YamlConfiguration playerConfig;
 
     private boolean Enabled = true;
+    private static final String resourceName = "/resources/automessages.yml";
 
     @Override
     public void onEnable() {
-        getLogger().info("Loading config files...");
+        getLogger().info("Loading config files....");
         loadConfig();
         try {
             setupPlayerConfig();
@@ -49,26 +50,23 @@ public class PerWorldWelcome extends JavaPlugin {
             getServer().getLogger().info("Couldn't setup the player config file! This plugin will not work without it, so it will be disabled!");
             getServer().getPluginManager().disablePlugin(this);
         }
+        try {
+            setupMessageConfig();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         getLogger().info("Config files loaded!");
         WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, playerConfig, this);
         JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
-        try {
-            if (getAnnouncheAchievements()) {
-                getLogger().warning("The option announce-achievements is enabled in server.properties! This value needs to be false in order for the player achievement function to work! Please set this value to false, or disable this functionality in the config.yml for this plugin!");
-            } else {
-                getServer().getPluginManager().registerEvents(new AwardAchievementListener(), this);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         getServer().getPluginManager().registerEvents(listener, this);
         getServer().getPluginManager().registerEvents(listener1, this);
         getCommand("pwwtoggle").setExecutor(new ToggleCMD(this));
+        getCommand("pwwinfo").setExecutor(new InfoCMD(getDescription().getVersion()));
         getLogger().info("PerWorldWelcome v." + getDescription().getVersion() + " has been enabled! All credits go to TheRealKS123");
     }
     @Override
     public void onDisable() {
-        getLogger().info("PerWorldWelcome v." + getDescription().getVersion() + " has been disbled! All credits go to TheRealKS123");
+        getLogger().info("PerWorldWelcome v." + getDescription().getVersion() + " has been disabled! All credits go to TheRealKS123");
     }
 
     private void loadConfig() {
@@ -198,6 +196,9 @@ public class PerWorldWelcome extends JavaPlugin {
             playerConfig.save(yml);
         }
         playerConfig = YamlConfiguration.loadConfiguration(yml);
+    }
+    private void setupMessageConfig() throws Exception {
+        saveResource("automessages.yml", false);
     }
 
     public boolean getEnabled() {
