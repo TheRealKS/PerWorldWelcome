@@ -44,7 +44,9 @@ public class ConfigUser {
         } else {
             paths.add(worldname);
         }
-        yml.createSection(target.getName());
+        if (!yml.isConfigurationSection(target.getName())) {
+            yml.createSection(target.getName());
+        }
         for (String s : paths) {
             yml.set(target.getName() + "." + s, true);
         }
