@@ -1,20 +1,27 @@
 package com.koens.perworldwelcome;
 
+import com.koens.perworldwelcome.automessage.AutoMessage;
 import com.koens.perworldwelcome.commands.InfoCMD;
 import com.koens.perworldwelcome.commands.ToggleCMD;
 import com.koens.perworldwelcome.listeners.JoinQuitListener;
 import com.koens.perworldwelcome.listeners.WorldChangeListener;
+import com.koens.perworldwelcome.metrics.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PerWorldWelcome extends JavaPlugin {
@@ -34,14 +41,19 @@ public class PerWorldWelcome extends JavaPlugin {
     private String globalMsg;
     private String globalFirstJoinWorldMsg;
     private String globalFirstJoinServerMsg;
+
     private YamlConfiguration playerConfig;
+    private YamlConfiguration automessagesconfig;
+
+    private int automessagestaskid;
 
     private boolean Enabled = true;
-    private static final String resourceName = "/resources/automessages.yml";
+
+    private HashMap<String, List<String>> automessages;
 
     @Override
     public void onEnable() {
-        getLogger().info("Loading config files....");
+        getLogger().info("Loading config files...");
         loadConfig();
         try {
             setupPlayerConfig();
@@ -60,8 +72,21 @@ public class PerWorldWelcome extends JavaPlugin {
         JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
         getServer().getPluginManager().registerEvents(listener, this);
         getServer().getPluginManager().registerEvents(listener1, this);
+        try {
+            if (getAnnouncheAchievements()) {
+                if (getConfig().getBoolean("force-achievement-messages-enabled")) {
+                    getLogger().warning("anounce-player-achievements is enabled in server.properties! Force enable is enabled.");
+                } else {
+                    getLogger().warning("anounce-player-achievements is enabled in server.properties! This interferes with PerWorldWelcome, so please set this value to false in server.properties to use this functionality!");
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         getCommand("pwwtoggle").setExecutor(new ToggleCMD(this));
         getCommand("pwwinfo").setExecutor(new InfoCMD(getDescription().getVersion()));
+        automessagestaskid = setupAutoMessages();
+        setupMetrics();
         getLogger().info("PerWorldWelcome v." + getDescription().getVersion() + " has been enabled! All credits go to TheRealKS123");
     }
     @Override
@@ -210,11 +235,13 @@ public class PerWorldWelcome extends JavaPlugin {
             loadConfig();
             try {
                 setupPlayerConfig();
+                setupAutoMessagesMap();
             } catch (IOException e) {
                 e.printStackTrace();
                 getServer().getLogger().info("Couldn't setup the player config file! This plugin will not work without it, so it will be disabled!");
                 getServer().getPluginManager().disablePlugin(this);
             }
+            setupAutoMessages();
             WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, playerConfig, this);
             JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
             getServer().getPluginManager().registerEvents(listener, this);
@@ -223,10 +250,10 @@ public class PerWorldWelcome extends JavaPlugin {
             PlayerChangedWorldEvent.getHandlerList().unregister(this);
             PlayerJoinEvent.getHandlerList().unregister(this);
             PlayerQuitEvent.getHandlerList().unregister(this);
+            getServer().getScheduler().cancelTask(automessagestaskid);
         }
     }
 
-    @SuppressWarnings("all")
     private boolean getAnnouncheAchievements() throws IOException {
         String file = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         file = file.substring(0, file.lastIndexOf("/"));
@@ -242,4 +269,53 @@ public class PerWorldWelcome extends JavaPlugin {
         }
         return false;
     }
+
+    private void setupAutoMessagesMap() throws IOException {
+        automessages = new HashMap<>();
+        File file = new File(getDataFolder(), "automessages.yml");
+        automessagesconfig = YamlConfiguration.loadConfiguration(file);
+        if (!file.exists()) {
+            automessagesconfig.save(file);
+        }
+        automessagesconfig = YamlConfiguration.loadConfiguration(file);
+        for (World world : getServer().getWorlds()) {
+            if (automessagesconfig.isSet(world.getName())) {
+                if (!automessagesconfig.getBoolean(world.getName() + ".enabled"))
+                    continue;
+                List<String> messages = new ArrayList<>();
+                for (String s1 : automessagesconfig.getStringList(world.getName() + ".mesages")) {
+                    if (!s1.startsWith("<EXCLUDE>")) {
+                        messages.add(ChatColor.translateAlternateColorCodes('&', s1));
+                    }
+                }
+                automessages.put(world.getUID().toString(), messages);
+            }
+        }
+    }
+
+    private int setupAutoMessages() {
+        long delay = getConfig().getInt("auto-message-delay") * 20L;
+        BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new AutoMessage(this), delay, delay);
+        return task.getTaskId();
+    }
+
+    private void setupMetrics() {
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            getLogger().warning("Couldn't enable metrics!");
+            getLogger().warning("Detailed error information: " + e.getMessage());
+        }
+    }
+
+    public boolean getWorldGrouping() {
+        return worldGrouping;
+    }
+
+    public HashMap<String, List<String>> getAutomessages() {
+        return automessages;
+    }
+
 }

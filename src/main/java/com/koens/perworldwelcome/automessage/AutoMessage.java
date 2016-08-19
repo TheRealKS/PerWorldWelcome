@@ -1,10 +1,22 @@
 package com.koens.perworldwelcome.automessage;
 
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class AutoMessage extends BukkitRunnable {
+import com.koens.perworldwelcome.PerWorldWelcome;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+
+public class AutoMessage implements Runnable {
+
+    private PerWorldWelcome plugin;
+
+    public AutoMessage(PerWorldWelcome p) {
+        this.plugin = p;
+    }
 
     public void run() {
-
+        for (World w : Bukkit.getWorlds()) {
+            if (plugin.getAutomessages().containsKey(w.getName())) {
+        }
     }
+
 }

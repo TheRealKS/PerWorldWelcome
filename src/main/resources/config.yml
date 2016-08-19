@@ -28,7 +28,8 @@ world-grouping: true
 #Settings for automessages
 #You can set messages in the automessages.yml file
 auto-message-enabled: true
-#You can format these messages with all units, so 1H:2M:55S is also possible. 30 seconds can however not be written as 0.5M.
-#Doing so will cause an exception which causes the plugin to use the default message.
-#You can run the command 'pwwcheckdelay' to check your formatting.
-auto-message-delay: 30S
+#In seconds
+auto-message-delay: 600
+
+#Force the plugin to enable the per world achievement messages, even though anounce-player-achievements is enabled.
+force-achievement-messages-enabled: false

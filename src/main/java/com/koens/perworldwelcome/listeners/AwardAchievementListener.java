@@ -7,18 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 
-import java.util.Map;
-
 public class AwardAchievementListener implements Listener {
 
-    Map<String, Boolean> booleanMap;
-    Map<String, String> stringMap;
-    /*
-    public AwardAchievementListener(Map<String, Boolean> booleans, Map<String, String> strings) {
-        this.booleanMap = booleans;
-        this.stringMap = strings;
-    }
-    */
     @EventHandler
     public void onAchievementAwarded(PlayerAchievementAwardedEvent event) {
         String mssg = "%PLAYER% just earned the achievment: %ACHIEVEMENT%";
