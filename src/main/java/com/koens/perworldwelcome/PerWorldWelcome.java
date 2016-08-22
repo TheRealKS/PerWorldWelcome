@@ -3,6 +3,7 @@ package com.koens.perworldwelcome;
 import com.koens.perworldwelcome.automessage.AutoMessage;
 import com.koens.perworldwelcome.commands.InfoCMD;
 import com.koens.perworldwelcome.commands.ToggleCMD;
+import com.koens.perworldwelcome.listeners.AwardAchievementListener;
 import com.koens.perworldwelcome.listeners.JoinQuitListener;
 import com.koens.perworldwelcome.listeners.WorldChangeListener;
 import com.koens.perworldwelcome.metrics.Metrics;
@@ -72,6 +73,7 @@ public class PerWorldWelcome extends JavaPlugin {
         JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
         getServer().getPluginManager().registerEvents(listener, this);
         getServer().getPluginManager().registerEvents(listener1, this);
+        getServer().getPluginManager().registerEvents(new AwardAchievementListener(), this);
         try {
             if (getAnnouncheAchievements()) {
                 if (getConfig().getBoolean("force-achievement-messages-enabled")) {
@@ -280,15 +282,57 @@ public class PerWorldWelcome extends JavaPlugin {
         automessagesconfig = YamlConfiguration.loadConfiguration(file);
         for (World world : getServer().getWorlds()) {
             if (automessagesconfig.isSet(world.getName())) {
-                if (!automessagesconfig.getBoolean(world.getName() + ".enabled"))
-                    continue;
-                List<String> messages = new ArrayList<>();
-                for (String s1 : automessagesconfig.getStringList(world.getName() + ".mesages")) {
-                    if (!s1.startsWith("<EXCLUDE>")) {
-                        messages.add(ChatColor.translateAlternateColorCodes('&', s1));
+                if (world.getEnvironment().equals(World.Environment.NORMAL)) {
+                    if (!automessagesconfig.isSet(world.getName() + "_nether") && !automessagesconfig.isSet(world.getName() + "_the_end")) {
+                        World nether;
+                        World end;
+                        if (!automessagesconfig.getBoolean(world.getName() + ".enabled"))
+                            continue;
+                        List<String> messages = new ArrayList<>();
+                        for (String s1 : automessagesconfig.getStringList(world.getName() + ".mesages")) {
+                            if (!s1.startsWith("<EXCLUDE>")) {
+                                messages.add(ChatColor.translateAlternateColorCodes('&', s1));
+                            }
+                        }
+                        automessages.put(world.getUID().toString(), messages);
+                        if (worldGrouping) {
+                            nether = getServer().getWorld(world.getName() + "_nether");
+                            end = getServer().getWorld(world.getName() + "_the_end");
+                            if (nether != null)
+                                automessages.put(nether.getUID().toString(), messages);
+                            if (end != null)
+                                automessages.put(nether.getUID().toString(), messages);
+                        }
+                    } else {
+                        if (automessagesconfig.isSet(world.getName() + "_nether")) {
+                            World nether = getServer().getWorld(world.getName() + "_nether");
+                            if (nether != null) {
+                                if (!automessagesconfig.getBoolean(world.getName() + "_nether.enabled"))
+                                    continue;
+                                List<String> messages = new ArrayList<>();
+                                for (String s1 : automessagesconfig.getStringList(world.getName() + "_nether.mesages")) {
+                                    if (!s1.startsWith("<EXCLUDE>")) {
+                                        messages.add(ChatColor.translateAlternateColorCodes('&', s1));
+                                    }
+                                }
+                                automessages.put(nether.getUID().toString(), messages);
+                            }
+                        } else if (automessagesconfig.isSet(world.getName() + "_the_end")) {
+                            World end = getServer().getWorld(world.getName() + "_the_end");
+                            if (end != null) {
+                                if (!automessagesconfig.getBoolean(world.getName() + "_the_end.enabled"))
+                                    continue;
+                                List<String> messages = new ArrayList<>();
+                                for (String s1 : automessagesconfig.getStringList(world.getName() + "_the_end.mesages")) {
+                                    if (!s1.startsWith("<EXCLUDE>")) {
+                                        messages.add(ChatColor.translateAlternateColorCodes('&', s1));
+                                    }
+                                }
+                                automessages.put(end.getUID().toString(), messages);
+                            }
+                        }
                     }
                 }
-                automessages.put(world.getUID().toString(), messages);
             }
         }
     }
@@ -308,10 +352,6 @@ public class PerWorldWelcome extends JavaPlugin {
             getLogger().warning("Couldn't enable metrics!");
             getLogger().warning("Detailed error information: " + e.getMessage());
         }
-    }
-
-    public boolean getWorldGrouping() {
-        return worldGrouping;
     }
 
     public HashMap<String, List<String>> getAutomessages() {

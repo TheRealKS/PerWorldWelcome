@@ -7,6 +7,19 @@
     <groupId>com.koens</groupId>
     <artifactId>perworldwelcome</artifactId>
     <version>1.2</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>
@@ -17,10 +30,6 @@
             <id>apache-commons-lang</id>
             <url>http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/</url>
         </repository>
-        <repository>
-            <id>stealthyone-repo</id>
-            <url>http://repo.stealthyone.com/content/groups/public</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -29,6 +38,11 @@
             <artifactId>bukkit</artifactId>
             <version>1.10.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.10.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

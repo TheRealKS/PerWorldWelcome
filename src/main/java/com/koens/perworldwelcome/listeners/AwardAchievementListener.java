@@ -1,5 +1,6 @@
 package com.koens.perworldwelcome.listeners;
 
+import com.koens.perworldwelcome.achievements.AchievementMessageFactory;
 import com.koens.perworldwelcome.achievements.Achievements;
 import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
@@ -13,7 +14,7 @@ public class AwardAchievementListener implements Listener {
     public void onAchievementAwarded(PlayerAchievementAwardedEvent event) {
         String mssg = "%PLAYER% just earned the achievment: %ACHIEVEMENT%";
         mssg = formatMSSG(event.getPlayer().getName(), mssg, event.getAchievement());
-        event.getPlayer().sendMessage(mssg);
+        AchievementMessageFactory.createJSONTemplate(event.getPlayer());
     }
 
     private String formatMSSG(String playerName, String message, Achievement achievement) {

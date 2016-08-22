@@ -26,7 +26,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="PerWorldWelcome" target="1.5" />
+      <module name="PerWorldWelcome" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>
