@@ -2,6 +2,7 @@ package com.koens.perworldwelcome;
 
 import com.koens.perworldwelcome.automessage.AutoMessage;
 import com.koens.perworldwelcome.commands.InfoCMD;
+import com.koens.perworldwelcome.commands.ReloadCMD;
 import com.koens.perworldwelcome.commands.ToggleCMD;
 import com.koens.perworldwelcome.listeners.AwardAchievementListener;
 import com.koens.perworldwelcome.listeners.JoinQuitListener;
@@ -15,7 +16,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class PerWorldWelcome extends JavaPlugin {
     private YamlConfiguration automessagesconfig;
 
     private int automessagestaskid;
+    private AutoMessage automessage;
 
     private boolean Enabled = true;
 
@@ -87,6 +89,8 @@ public class PerWorldWelcome extends JavaPlugin {
         }
         getCommand("pwwtoggle").setExecutor(new ToggleCMD(this));
         getCommand("pwwinfo").setExecutor(new InfoCMD(getDescription().getVersion()));
+        getCommand("pwwreload").setExecutor(new ReloadCMD());
+        automessage = new AutoMessage(this);
         automessagestaskid = setupAutoMessages();
         setupMetrics();
         getLogger().info("PerWorldWelcome v." + getDescription().getVersion() + " has been enabled! All credits go to TheRealKS123");
@@ -339,8 +343,14 @@ public class PerWorldWelcome extends JavaPlugin {
 
     private int setupAutoMessages() {
         long delay = getConfig().getInt("auto-message-delay") * 20L;
-        BukkitTask task = getServer().getScheduler().runTaskTimerAsynchronously(this, new AutoMessage(this), delay, delay);
-        return task.getTaskId();
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                automessage.run();
+            }
+        };
+        runnable.runTaskTimer(this, delay, delay);
+        return runnable.getTaskId();
     }
 
     private void setupMetrics() {

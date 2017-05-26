@@ -49,12 +49,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
-
-        <dependency>
-            <groupId>mkremins</groupId>
-            <artifactId>fanciful</artifactId>
-            <version>0.3.5-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
 

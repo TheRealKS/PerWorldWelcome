@@ -10,6 +10,9 @@ commands:
   pwwinfo:
     description: This command will display info about this plugin
     usage: /pwwinfo
+  pwwreload:
+    description: TY
+    usage: /pwwreload
 permissions:
   perworldwelcome.receiveerrors:
     description: Allows you to receive error messages this plugin generates.
