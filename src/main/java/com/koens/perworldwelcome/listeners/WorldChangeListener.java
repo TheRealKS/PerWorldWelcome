@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WorldChangeListener extends ConfigUser implements Listener {
@@ -70,12 +71,12 @@ public class WorldChangeListener extends ConfigUser implements Listener {
             Player player = event.getPlayer();
             World from = event.getFrom();
             String path = player.getName() + "." + player.getWorld().getName();
-            List<Player> oldfriends = setupLeavingWorldList(from);
+            List<Player> oldfriends = setupLeavingWorldList(from, player.getWorld());
             String message = formatLeaveMessage(leaveMsg, player.getName(), from.getName());
             for (Player p : oldfriends) {
                 p.sendMessage(message);
             }
-            List<Player> newfriends = setupJoiningWorldList(player.getWorld());
+            List<Player> newfriends = setupJoiningWorldList(player.getWorld(), event.getFrom());
             if (broadcastFirstJoin) {
                 if (playerConfig.isSet(path) && !playerConfig.getBoolean(path)) {
                     String msg = formatJoinMessage(firstJoinMsg, player.getName(), player.getWorld().getName());
@@ -144,9 +145,14 @@ public class WorldChangeListener extends ConfigUser implements Listener {
         return ChatColor.translateAlternateColorCodes(AND, formated);
     }
 
-    private List<Player> setupJoiningWorldList(World joining) {
+    private List<Player> setupJoiningWorldList(World joining, World leaving) {
         if (worldGrouping) {
             String worldname = joining.getName();
+            if (worldname.contains("_nether") || leaving.getName().contains("_nether") || worldname.contains("_the_end") || leaving.getName().contains("_the_end")) {
+                List<Player> stuff;
+                stuff = Arrays.asList();
+                return stuff;
+            }
             if (joining.getEnvironment().equals(World.Environment.NETHER)) {
                 List<Player> overworld = new ArrayList<Player>();
                 List<Player> end = new ArrayList<Player>();
@@ -192,9 +198,14 @@ public class WorldChangeListener extends ConfigUser implements Listener {
         }
     }
 
-    private List<Player> setupLeavingWorldList(World leaving) {
+    private List<Player> setupLeavingWorldList(World leaving, World joining) {
         if (worldGrouping) {
             String worldname = leaving.getName();
+            if (worldname.contains("_nether") || leaving.getName().contains("_nether") || worldname.contains("_the_end") || leaving.getName().contains("_the_end")) {
+                List<Player> stuff;
+                stuff = Arrays.asList();
+                return stuff;
+            }
             if (leaving.getEnvironment().equals(World.Environment.NETHER)) {
                 List<Player> overworld = new ArrayList<Player>();
                 List<Player> end = new ArrayList<Player>();

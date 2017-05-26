@@ -37,19 +37,19 @@ public enum Achievements {
     OVERPOWERED("Overpowered", "Eat a Notch apple");
 
     private final String name;
-    private final String description;
+    private final String clientequivalent;
 
-    Achievements(final String name, final String description) {
+    Achievements(final String name, final String clientequivalent) {
         this.name = name;
-        this.description = description;
+        this.clientequivalent = clientequivalent;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getClientequivalent() {
+        return clientequivalent;
     }
 
 }

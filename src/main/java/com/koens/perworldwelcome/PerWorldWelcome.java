@@ -2,9 +2,7 @@ package com.koens.perworldwelcome;
 
 import com.koens.perworldwelcome.automessage.AutoMessage;
 import com.koens.perworldwelcome.commands.InfoCMD;
-import com.koens.perworldwelcome.commands.ReloadCMD;
 import com.koens.perworldwelcome.commands.ToggleCMD;
-import com.koens.perworldwelcome.listeners.AwardAchievementListener;
 import com.koens.perworldwelcome.listeners.JoinQuitListener;
 import com.koens.perworldwelcome.listeners.WorldChangeListener;
 import com.koens.perworldwelcome.metrics.Metrics;
@@ -48,7 +46,7 @@ public class PerWorldWelcome extends JavaPlugin {
     private YamlConfiguration automessagesconfig;
 
     private int automessagestaskid;
-    private AutoMessage automessage;
+    private AutoMessage autoMessage;
 
     private boolean Enabled = true;
 
@@ -75,22 +73,14 @@ public class PerWorldWelcome extends JavaPlugin {
         JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
         getServer().getPluginManager().registerEvents(listener, this);
         getServer().getPluginManager().registerEvents(listener1, this);
-        getServer().getPluginManager().registerEvents(new AwardAchievementListener(), this);
-        try {
-            if (getAnnouncheAchievements()) {
-                if (getConfig().getBoolean("force-achievement-messages-enabled")) {
-                    getLogger().warning("anounce-player-achievements is enabled in server.properties! Force enable is enabled.");
-                } else {
-                    getLogger().warning("anounce-player-achievements is enabled in server.properties! This interferes with PerWorldWelcome, so please set this value to false in server.properties to use this functionality!");
-                }
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
         getCommand("pwwtoggle").setExecutor(new ToggleCMD(this));
         getCommand("pwwinfo").setExecutor(new InfoCMD(getDescription().getVersion()));
-        getCommand("pwwreload").setExecutor(new ReloadCMD());
-        automessage = new AutoMessage(this);
+        try {
+            setupAutoMessagesMap();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        autoMessage = new AutoMessage(this);
         automessagestaskid = setupAutoMessages();
         setupMetrics();
         getLogger().info("PerWorldWelcome v." + getDescription().getVersion() + " has been enabled! All credits go to TheRealKS123");
@@ -260,6 +250,7 @@ public class PerWorldWelcome extends JavaPlugin {
         }
     }
 
+    @SuppressWarnings("Since15")
     private boolean getAnnouncheAchievements() throws IOException {
         String file = Bukkit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         file = file.substring(0, file.lastIndexOf("/"));
@@ -293,7 +284,7 @@ public class PerWorldWelcome extends JavaPlugin {
                         if (!automessagesconfig.getBoolean(world.getName() + ".enabled"))
                             continue;
                         List<String> messages = new ArrayList<>();
-                        for (String s1 : automessagesconfig.getStringList(world.getName() + ".mesages")) {
+                        for (String s1 : automessagesconfig.getStringList(world.getName() + ".messages")) {
                             if (!s1.startsWith("<EXCLUDE>")) {
                                 messages.add(ChatColor.translateAlternateColorCodes('&', s1));
                             }
@@ -314,7 +305,7 @@ public class PerWorldWelcome extends JavaPlugin {
                                 if (!automessagesconfig.getBoolean(world.getName() + "_nether.enabled"))
                                     continue;
                                 List<String> messages = new ArrayList<>();
-                                for (String s1 : automessagesconfig.getStringList(world.getName() + "_nether.mesages")) {
+                                for (String s1 : automessagesconfig.getStringList(world.getName() + "_nether.messages")) {
                                     if (!s1.startsWith("<EXCLUDE>")) {
                                         messages.add(ChatColor.translateAlternateColorCodes('&', s1));
                                     }
@@ -327,7 +318,7 @@ public class PerWorldWelcome extends JavaPlugin {
                                 if (!automessagesconfig.getBoolean(world.getName() + "_the_end.enabled"))
                                     continue;
                                 List<String> messages = new ArrayList<>();
-                                for (String s1 : automessagesconfig.getStringList(world.getName() + "_the_end.mesages")) {
+                                for (String s1 : automessagesconfig.getStringList(world.getName() + "_the_end.messages")) {
                                     if (!s1.startsWith("<EXCLUDE>")) {
                                         messages.add(ChatColor.translateAlternateColorCodes('&', s1));
                                     }
@@ -336,7 +327,11 @@ public class PerWorldWelcome extends JavaPlugin {
                             }
                         }
                     }
+                } else {
+                    //getLogger().info("not ov");
                 }
+            } else {
+                //getLogger().info("not set");
             }
         }
     }
@@ -346,7 +341,7 @@ public class PerWorldWelcome extends JavaPlugin {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                automessage.run();
+                autoMessage.run();
             }
         };
         runnable.runTaskTimer(this, delay, delay);
@@ -368,4 +363,7 @@ public class PerWorldWelcome extends JavaPlugin {
         return automessages;
     }
 
+    public boolean getWorldGrouping() {
+        return worldGrouping;
+    }
 }
