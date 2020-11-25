@@ -1,6 +1,6 @@
 name: PerWorldWelcome
 main: com.koens.perworldwelcome.PerWorldWelcome
-version: 1.2
+version: 1.2.2
 author: TheRealKS123
 commands:
   pwwtoggle:

@@ -19,6 +19,7 @@ public class PerWorldWelcome extends JavaPlugin {
     private boolean firstJoinServerMsg;
     private boolean firstJoinWorldMsg;
     private boolean worldGrouping;
+    private boolean suppress;
     private boolean errorqueue;
     private String joinMsg;
     private String leaveMsg;
@@ -45,7 +46,7 @@ public class PerWorldWelcome extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
         getLogger().info("Config files loaded!");
-        WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, playerConfig, this);
+        WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, suppress, playerConfig, this);
         JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
         getServer().getPluginManager().registerEvents(listener, this);
         getServer().getPluginManager().registerEvents(listener1, this);
@@ -97,6 +98,14 @@ public class PerWorldWelcome extends JavaPlugin {
         else {
             getLogger().warning("The formatting of an item in config.yml is invalid! Item: world-grouping");
             worldGrouping = true;
+            errorqueue = true;
+        }
+        if (getConfig().isSet("world-grouping-suppress-nether-end") && getConfig().isBoolean("world-grouping-suppress-nether-end")) {
+            suppress = getConfig().getBoolean("world-grouping-suppress-nether-end");
+        }
+        else {
+            getLogger().warning("The formatting of an item in config.yml is invalid! Item: world-grouping-suppress-nether-end");
+            suppress = false;
             errorqueue = true;
         }
         if (getConfig().isSet("join-message") && getConfig().isString("join-message")) {
@@ -200,7 +209,7 @@ public class PerWorldWelcome extends JavaPlugin {
                 getServer().getLogger().info("Couldn't setup the player config file! This plugin will not work without it, so it will be disabled!");
                 getServer().getPluginManager().disablePlugin(this);
             }
-            WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, playerConfig, this);
+            WorldChangeListener listener = new WorldChangeListener(joinMsg, leaveMsg, globalMsg, firstJoinMsg, globalFirstJoinWorldMsg, firstJoinWorldMsg, worldGrouping, globalBroadcast, suppress, playerConfig, this);
             JoinQuitListener listener1 = new JoinQuitListener(errorBroadcast, errorqueue, worldGrouping, firstJoinServerMsg, globalBroadcast, joinServerMsg, leaveServerMsg, firstJoinSrvrMsg, globalFirstJoinServerMsg, this, playerConfig);
             getServer().getPluginManager().registerEvents(listener, this);
             getServer().getPluginManager().registerEvents(listener1, this);

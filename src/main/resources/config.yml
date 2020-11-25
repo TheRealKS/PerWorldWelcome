@@ -24,3 +24,5 @@ first-join-world-message: true
 # where 'world' is of course the name of the world.
 # If world grouping is not enabled, old behaviour will be used.
 world-grouping: true
+#Will suppress join/leave messages when moving between nether/overworld, end/overworld, vice versa
+world-grouping-suppress-nether-end: true
